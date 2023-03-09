@@ -19,5 +19,5 @@ steps:
       from_secret: registry_username
     password:
       from_secret: registry_password
-    repo: harbor.adamkoro.com/library/swagger-ui
+    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
     tags: latest
