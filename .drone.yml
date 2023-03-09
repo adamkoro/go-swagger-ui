@@ -20,5 +20,7 @@ steps:
     password:
       from_secret: registry_password
     repo: harbor.adamkoro.com/swagger-ui/swagger-ui
-    tags: latest
-    dockerfile: ./Dockerfile
+    registry: harbor.adamkoro.com
+    tags: 
+      - latest
+      - ${DRONE_COMMIT_SHA:0:7}
