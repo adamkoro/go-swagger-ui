@@ -1,0 +1,31 @@
+name: swagger-ui
+kind: pipeline
+type: kubernetes
+
+#globals:
+#  - &regsitry_creds
+#    REGISTRY_USERNAME:
+#      from_secret: registry_username
+#    REGISTRY_PASSWORD:
+#      from_secret: registry_password
+#    REGISTRY_URL:
+#      from_secret: registry_url
+
+steps:
+  - name: build
+    image: gcr.io/kaniko-project/executor:latest
+    environment:
+      <<: *regsitry_creds
+      DOCKER_CONFIG: /kaniko/.docker
+    commands:
+      - --context=git://github.com/adamkoro/go-swagger-ui
+      - --destination=harbor.adamkoro.com/library/swagger-ui:latest
+    volumes:
+      - name: harborcred
+        path: /kaniko/.docker
+---
+kind: secret
+name: harborcred
+get:
+  path: harborcred
+  name: .dockerconfigjson
