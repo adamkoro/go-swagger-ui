@@ -14,9 +14,6 @@ type: kubernetes
 steps:
   - name: build
     image: gcr.io/kaniko-project/executor:latest
-    environment:
-      <<: *regsitry_creds
-      DOCKER_CONFIG: /kaniko/.docker
     commands:
       - --context=git://github.com/adamkoro/go-swagger-ui
       - --destination=harbor.adamkoro.com/library/swagger-ui:latest
