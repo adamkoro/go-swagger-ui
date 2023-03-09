@@ -2,15 +2,6 @@ name: swagger-ui
 kind: pipeline
 type: kubernetes
 
-#globals:
-#  - &regsitry_creds
-#    REGISTRY_USERNAME:
-#      from_secret: registry_username
-#    REGISTRY_PASSWORD:
-#      from_secret: registry_password
-#    REGISTRY_URL:
-#      from_secret: registry_url
-
 steps:
 - name: kaniko
   image: plugins/kaniko
@@ -23,4 +14,3 @@ steps:
     registry: harbor.adamkoro.com
     tags: 
       - latest
-      - ${DRONE_COMMIT_SHA:0:7}
