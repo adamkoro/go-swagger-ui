@@ -1,0 +1,75 @@
+# Swagger ui deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-ui
+  labels:
+    app: swagger-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swagger-ui
+  template:
+    metadata:
+      labels:
+        app: swagger-ui
+    spec:
+      containers:
+      - name: swagger-ui
+        image: harbor.adamkoro.com/library/swagger-ui:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: SWAGGER_URL
+          value: "https://raw.githubusercontent.com/neuvector/neuvector/main/controller/api/apis.yaml"
+        - name: STATIC_FILE_PATH
+          value: /home/user/static
+        livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/ping
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+        readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/ping
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {}
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsUser: 10000
+        resources:
+          requests:
+            cpu: 5m
+            memory: 20Mi
+---
+# Swagger ui service
+apiVersion: v1
+kind: Service
+metadata:
+  name: swagger-ui
+  labels:
+    app: swagger-ui
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: swagger-ui
+---
