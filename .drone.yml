@@ -21,3 +21,4 @@ steps:
       from_secret: registry_password
     repo: harbor.adamkoro.com/swagger-ui/swagger-ui
     tags: latest
+    dockerfile: ./Dockerfile
