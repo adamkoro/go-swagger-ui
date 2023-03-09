@@ -12,17 +12,12 @@ type: kubernetes
 #      from_secret: registry_url
 
 steps:
-  - name: build
-    image: gcr.io/kaniko-project/executor:latest
-    commands:
-      - --context=git://github.com/adamkoro/go-swagger-ui
-      - --destination=harbor.adamkoro.com/library/swagger-ui:latest
-    volumes:
-      - name: harborcred
-        path: /kaniko/.docker
----
-kind: secret
-name: harborcred
-get:
-  path: harborcred
-  name: .dockerconfigjson
+- name: kaniko
+  image: plugins/kaniko
+  settings:
+    username:
+      from_secret: registry_username
+    password:
+      from_secret: registry_password
+    repo: harbor.adamkoro.com/library/swagger-ui
+    tags: latest
