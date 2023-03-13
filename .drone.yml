@@ -3,12 +3,20 @@ kind: pipeline
 type: kubernetes
 
 steps:
-- name: kaniko
-  image: plugins/kaniko:1.7.1
+#- name: kaniko
+#  image: plugins/kaniko:1.7.1
+#  settings:
+#    username:
+#      from_secret: registry_username
+#    password:
+#      from_secret: registry_password
+#    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
+#    registry: harbor.adamkoro.com
+- name: build
+  image: plugins/docker
   settings:
-    username:
-      from_secret: registry_username
-    password:
-      from_secret: registry_password
+    username: registry_username
+    password: registry_password
     repo: harbor.adamkoro.com/swagger-ui/swagger-ui
-    registry: harbor.adamkoro.com
+    tags:
+    - latest
