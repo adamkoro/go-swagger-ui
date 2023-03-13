@@ -5,6 +5,11 @@ type: kubernetes
 steps:
 - name: create-registry-auth
   image: harbor.adamkoro.com/bci/bci-micro:15.4
+  environment:
+    registry_username:
+      from_secret: registry_username
+    registry_password:
+      from_secret: registry_password
   commands:
   - echo "{\"auths\":{\"harbor.adamkoro.com\":{\"auth\":\"$(echo "${registry_username}:${registry_password}" | base64)\"}}}" > /kaniko/.docker/config.json
   volumes:
@@ -23,7 +28,7 @@ steps:
 - name: build
   image: harbor.adamkoro.com/library/kaniko-executer@sha256:08a12f45e82f6221db6750eef29599dc6bcc18c24805a2204fff37f3ab78d39f
   commands:
-  - /usr/bin/executor --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
+  - /usr/bin/kaniko --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
   volumes:
   - name: kaniko-auth
     path: /kaniko/.docker
