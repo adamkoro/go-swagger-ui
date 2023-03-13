@@ -4,7 +4,7 @@ type: kubernetes
 
 steps:
 - name: kaniko
-  image: plugins/kaniko
+  image: plugins/kaniko:1.7.1
   settings:
     username:
       from_secret: registry_username
