@@ -24,7 +24,7 @@ steps:
     - latest
     registry: harbor.adamkoro.com
     dockerfile: Dockerfile
-    context: .
+    #context: .
   volumes:
   - name: tmp-build
     path: /build
