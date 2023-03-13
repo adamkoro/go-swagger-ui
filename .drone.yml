@@ -13,18 +13,19 @@ steps:
     path: /build
 
 - name: build
-  image: plugins/docker
+  image: plugins/buildah
   settings:
+    registry: harbor.adamkoro.com
+    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
+    dockerfile: Dockerfile
     username:
       from_secret: registry_username
     password:
       from_secret: registry_password
-    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
     tags:
     - latest
-    registry: harbor.adamkoro.com
-    dockerfile: Dockerfile
-    #context: .
+    layers: true
+
   volumes:
   - name: tmp-build
     path: /build
