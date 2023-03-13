@@ -12,14 +12,18 @@ steps:
     path: /kaniko/.docker
 
 - name: build
-  image: plugins/kaniko:1.7.1
-  settings:
+  image: gcr.io/kaniko-project/executor:latest
     #username:
     #  from_secret: registry_username
     #password:
     #  from_secret: registry_password
-    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
-    registry: harbor.adamkoro.com
+    #repo: harbor.adamkoro.com/swagger-ui/swagger-ui
+    #registry: harbor.adamkoro.com
+  commands:
+    ["--dockerfile=Dockerfile",
+    "--context=dir://.",
+    "--destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest"
+    ]
   volumes:
     - name: kaniko-auth
       path: /kaniko/.docker
