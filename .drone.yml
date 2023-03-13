@@ -3,29 +3,29 @@ kind: pipeline
 type: kubernetes
 
 steps:
-#- name: prebuild
-#  image: harbor.adamkoro.com/bci/bci-base:15.4
-#  commands:
-#  - echo "{\"auths\":{\"harbor.adamkoro.com\":{\"auth\":\"$(echo "${registry_username}:${registry_password}" | base64)\"}}}" > /kaniko/.docker/config.json
-#  volumes:
-#  - name: kaniko-auth
-#    path: /kaniko/.docker
+- name: prebuild
+  image: harbor.adamkoro.com/bci/bci-base:15.4
+  commands:
+  - echo "{\"auths\":{\"harbor.adamkoro.com\":{\"auth\":\"$(echo "${registry_username}:${registry_password}" | base64)\"}}}" > /kaniko/.docker/config.json
+  volumes:
+  - name: kaniko-auth
+    path: /kaniko/.docker
 
 - name: build
-  image: plugins/docker
-  settings:
-    registry: harbor.adamkoro.com
-    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
-    username:
-      from_secret: registry_username
-    password:
-      from_secret: registry_password
-    tags:
-    - latest
-  #volumes:
-  #  - name: kaniko-auth
-  #    path: /kaniko/.docker
+  image: gcr.io/kaniko-project/executor:latest
+    #username:
+    #  from_secret: registry_username
+    #password:
+    #  from_secret: registry_password
+    #repo: harbor.adamkoro.com/swagger-ui/swagger-ui
+    #registry: harbor.adamkoro.com
+  commands:
+  - "--dockerfile=Dockerfile --context=dir://. --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest"
 
-#volumes:
-#- name: kaniko-auth
-#  temp: {}
+  volumes:
+    - name: kaniko-auth
+      path: /kaniko/.docker
+
+volumes:
+- name: kaniko-auth
+  temp: {}
