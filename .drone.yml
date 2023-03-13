@@ -3,6 +3,14 @@ kind: pipeline
 type: kubernetes
 
 steps:
+- name: create-registry-auth
+  image: harbor.adamkoro.com/bci/bci-micro:15.4
+  commands:
+  - echo "{\"auths\":{\"harbor.adamkoro.com\":{\"auth\":\"$(echo "${registry_username}:${registry_password}" | base64)\"}}}" > /kaniko/.docker/config.json
+  volumes:
+  - name: kaniko-auth
+    path: /kaniko/.docker
+
 - name: build-binary
   image: harbor.adamkoro.com/bci/golang:1.19
   commands:
@@ -13,23 +21,13 @@ steps:
     path: /build
 
 - name: build
-  image: plugins/buildah
-  settings:
-    registry: harbor.adamkoro.com
-    repo: harbor.adamkoro.com/swagger-ui/swagger-ui
-    dockerfile: Dockerfile
-    username:
-      from_secret: registry_username
-    password:
-      from_secret: registry_password
-    tags:
-    - latest
-    layers: true
-
+  image: harbor.adamkoro.com/library/kaniko-executer@sha256:08a12f45e82f6221db6750eef29599dc6bcc18c24805a2204fff37f3ab78d39f
+  commands:
+  - /usr/bin/executor --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
   volumes:
-  - name: tmp-build
-    path: /build
+  - name: kaniko-auth
+    path: /kaniko/.docker
 
 volumes:
-- name: tmp-build
+- name: kaniko-auth
   temp: {}
