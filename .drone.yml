@@ -25,7 +25,7 @@ steps:
   - name: tmp-build
     path: /build
 
-- name: build
+- name: build-image
   image: harbor.adamkoro.com/library/kaniko-executer@sha256:08a12f45e82f6221db6750eef29599dc6bcc18c24805a2204fff37f3ab78d39f
   commands:
   - /usr/bin/kaniko --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
