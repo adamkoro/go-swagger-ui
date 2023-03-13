@@ -6,6 +6,7 @@ steps:
 - name: build-binary
   image: harbor.adamkoro.com/bci/golang:1.19
   commands:
+  - cd swagger-ui
   - go build -ldflags="-s -w" -o /build/swagger-ui
   volumes:
   - name: tmp-build
