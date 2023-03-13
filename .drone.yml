@@ -20,10 +20,10 @@ steps:
     #repo: harbor.adamkoro.com/swagger-ui/swagger-ui
     #registry: harbor.adamkoro.com
   commands:
-    ["--dockerfile=Dockerfile",
-    "--context=dir://.",
-    "--destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest"
-    ]
+    - "--dockerfile=Dockerfile"
+    - "--context=dir://."
+    - "--destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest"
+    
   volumes:
     - name: kaniko-auth
       path: /kaniko/.docker
