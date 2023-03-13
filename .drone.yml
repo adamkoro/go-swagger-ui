@@ -11,7 +11,8 @@ steps:
     PASSWORD:
       from_secret: registry_password
   commands:
-  - bash echo "${USERNAME}:${PASSWORD}" | base64
+  - echo ${USERNAME} > /kaniko/.docker/username
+  - cat /kaniko/.docker/username
   - echo "{\"auths\":{\"harbor.adamkoro.com\":{\"auth\":\"$(echo "${USERNAME}:${PASSWORD}" | base64)\"}}}" > /kaniko/.docker/config.json
   - cat /kaniko/.docker/config.json
   volumes:
