@@ -19,8 +19,8 @@ steps:
     #  from_secret: registry_password
     #repo: harbor.adamkoro.com/swagger-ui/swagger-ui
     #registry: harbor.adamkoro.com
-  commands:
-  - "--dockerfile=Dockerfile --context=dir://. --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest"
+  #commands:
+  #- "--dockerfile=Dockerfile --context=dir://. --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest"
 
   volumes:
     - name: kaniko-auth
