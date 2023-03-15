@@ -24,11 +24,10 @@ steps:
 - name: build-image
   image: harbor.adamkoro.com/library/kaniko-executer@sha256:08a12f45e82f6221db6750eef29599dc6bcc18c24805a2204fff37f3ab78d39f
   environment:
-    DOCKER_CONFIG:
-      from_secret: harbor-auth
+    DOCKER_CONFIG: "eyJhdXRocyI6eyJodHRwczovL2hhcmJvci5hZGFta29yby5jb20iOnsidXNlcm5hbWUiOiJyb2JvdCtmdWxsIiwicGFzc3dvcmQiOiI0S0t2c1NNUkY1MnFwZ2pCc1pLZ0Fha29SaU9zV3ZDciJ9fX0="
   commands:
   - mkdir -p /kaniko/.docker
-  - echo "$DOCKER_CONFIG" > /kaniko/.docker/config.json
+  - echo "$DOCKER_CONFIG" | base64 -d > /kaniko/.docker/config.json
   - echo "$DOCKER_CONFIG"
   - cat /kaniko/.docker/config.json
   - /usr/bin/kaniko --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
