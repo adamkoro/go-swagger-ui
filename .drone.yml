@@ -16,10 +16,10 @@ steps:
   image: plugins/kaniko
   settings:
     username:
-      from_secret: harbor_username
+      from_secret: docker_username
     password:
-      from_secret: harbor_password
-    repo: harbor.adamkoro.com/swagger-ui/swagger-ui #adamkoro/go-swagger-ui
+      from_secret: docker_password
+    repo: adamkoro/go-swagger-ui
     tags:
     - latest
     - ${DRONE_COMMIT_SHA:0:7}
