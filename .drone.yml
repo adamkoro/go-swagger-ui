@@ -3,15 +3,6 @@ kind: pipeline
 type: kubernetes
 
 steps:
-- name: build-binary
-  image: harbor.adamkoro.com/bci/golang:1.19
-  commands:
-  - cd swagger-ui
-  - go build -ldflags="-s -w" -o /build/swagger-ui
-  volumes:
-  - name: tmp-build
-    path: /build
-
 - name: build-image
   image: plugins/kaniko
   settings:
@@ -23,11 +14,6 @@ steps:
     tags:
     - latest
     - ${DRONE_COMMIT_SHA:0:7}
-    #registry: docker.io
   volumes:
   - name: tmp-build
     path: /build
-
-volumes:
-- name: tmp-build
-  temp: {}
