@@ -23,13 +23,14 @@ steps:
 
 - name: build-image
   image: harbor.adamkoro.com/library/kaniko-executer@sha256:08a12f45e82f6221db6750eef29599dc6bcc18c24805a2204fff37f3ab78d39f
+  environment:
+    DOCKER_CONFIG:
+      from_secret: harbor-auth
   commands:
-  - ls -la /kaniko/.docker
-  - cat /kaniko/.docker/config.json
+  - mkdir -p /kaniko/.docker
+  - echo "$DOCKER_CONFIG" > /kaniko/.docker/config.json
   - /usr/bin/kaniko --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
   volumes:
-  - name: harborcred
-    path: /kaniko/.docker
   - name: tmp-build
     path: /build
 
@@ -38,7 +39,7 @@ volumes:
   temp: {}
 ---
 kind: secret
-name: harborcred 
+name: harbor-auth 
 get:
   path: harborcred
   name: .dockerconfigjson
