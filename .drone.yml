@@ -37,11 +37,3 @@ steps:
       from_secret: github_email
     ssh_key:
       from_secret: github_private_ssh_key
-
-
-trigger:
-  event:
-  - push
-  branch:
-  - master
-
