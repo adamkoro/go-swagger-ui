@@ -3,7 +3,7 @@ kind: pipeline
 type: kubernetes
 
 steps:
-- name: build and push container image
+- name: Build and push container image
   image: plugins/kaniko
   settings:
     username:
@@ -17,13 +17,11 @@ steps:
 
 - name: Change image tag in k8s yaml
   image: harbor.adamkoro.com/bci/bci-base:15.4
-  environment:
-    FILE: swagger-ui.yaml
   commands:
   - zypper ref && zypper in -y yq
   - yq -i '.spec.template.spec.containers[0].image = "adamkoro/go-swagger-ui:${DRONE_COMMIT_SHA:0:7}"' k8s/deployment.yaml
 
-- name: push to git
+- name: Push to git
   image: appleboy/drone-git-push
   settings:
     branch: main
