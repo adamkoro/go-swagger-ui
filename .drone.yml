@@ -14,6 +14,7 @@ steps:
     tags:
     - latest
     - ${DRONE_COMMIT_SHA:0:7}
+    no_push: true
 
 - name: Change image tag in k8s yaml
   image: harbor.adamkoro.com/bci/bci-base:15.4
@@ -33,5 +34,5 @@ steps:
       from_secret: github_username
     author_email:
       from_secret: github_email
-    ssh_key:
-      from_secret: github_private_ssh_key
+    #ssh_key:
+    #  from_secret: github_private_ssh_key
