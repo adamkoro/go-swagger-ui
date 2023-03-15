@@ -3,7 +3,7 @@ kind: pipeline
 type: kubernetes
 
 steps:
-- name: Build and push container image
+- name: build and push image
   image: plugins/kaniko
   settings:
     username:
@@ -16,13 +16,13 @@ steps:
     - ${DRONE_COMMIT_SHA:0:7}
     no_push: true
 
-- name: Change image tag in k8s yaml
+- name: change image tag
   image: harbor.adamkoro.com/bci/bci-base:15.4
   commands:
   - zypper ar http://download.opensuse.org/distribution/leap/15.4/repo/oss/ leap_15.4 && zypper -n --gpg-auto-import-keys ref && zypper -n in yq
   - yq -i '.spec.template.spec.containers[0].image = "adamkoro/go-swagger-ui:${DRONE_COMMIT_SHA:0:7}"' k8s/deployment.yaml
 
-- name: Push to git
+- name: push to repo
   image: appleboy/drone-git-push
   settings:
     branch: main
