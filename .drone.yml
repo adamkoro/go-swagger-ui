@@ -44,9 +44,4 @@ trigger:
   - push
   branch:
   - master
-  repo: 
-    include:
-      - "swagger-ui/**"
-      - "Dockerfile"
-      - ".drone.yml"
 
