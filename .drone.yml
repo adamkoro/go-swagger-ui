@@ -24,8 +24,8 @@ steps:
 - name: build-image
   image: harbor.adamkoro.com/library/kaniko-executer@sha256:08a12f45e82f6221db6750eef29599dc6bcc18c24805a2204fff37f3ab78d39f
   commands:
-  #- ls -la /kaniko/.docker
-  #- cat /kaniko/.docker/config.json
+  - ls -la /kaniko/.docker
+  - cat /kaniko/.docker/config.json
   - /usr/bin/kaniko --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
   volumes:
   - name: harborcred
