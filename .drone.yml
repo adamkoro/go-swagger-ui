@@ -23,7 +23,7 @@ steps:
     tags:
     - latest
     - ${DRONE_COMMIT_SHA:0:7}
-    registry: docker.io
+    #registry: docker.io
   volumes:
   - name: tmp-build
     path: /build
