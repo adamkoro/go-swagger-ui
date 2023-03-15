@@ -1,8 +1,8 @@
 FROM harbor.adamkoro.com/bci/bci-micro:15.4
 WORKDIR /home/user
-RUN mkdir static
+#RUN mkdir static
 # /build mount comes from CI temp directory
-COPY build/swagger-ui ${WORKDIR}
+COPY /build/swagger-ui ${WORKDIR}
 ENV GIN_MODE=release \
     HTTP_PORT=8080 \
     STATIC_FILE_PATH=/home/user/static \
