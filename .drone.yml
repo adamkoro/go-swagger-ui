@@ -29,6 +29,7 @@ steps:
   commands:
   - mkdir -p /kaniko/.docker
   - echo "$DOCKER_CONFIG" > /kaniko/.docker/config.json
+  - echo "$DOCKER_CONFIG"
   - cat /kaniko/.docker/config.json
   - /usr/bin/kaniko --dockerfile=Dockerfile --context=dir:///build --destination=harbor.adamkoro.com/swagger-ui/swagger-ui:latest
   volumes:
