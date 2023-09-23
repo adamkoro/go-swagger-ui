@@ -48,14 +48,22 @@ steps:
   - name: wait for linode
     image: registry.adamkoro.com/library/ansible:latest
     environment:
-      ANSIBLE_USER: root
+      SSH_PRIVATE_KEY:
+        from_secret: linode_ssh_private_key
     commands:
       - cat /build_env/linode_ip_address
       - cat /build_env/linode_root_pass
       - while ! nc -q0 $(cat /build_env/linode_ip_address | cut -d'=' -f2) 22 < /dev/null > /dev/null 2>&1; do sleep 1;done
+      - ssh-keyscan -H $(cat /build_env/linode_ip_address | cut -d'=' -f2) >> /root/.ssh/known_hosts
+      - ssh-add $SSH_PRIVATE_KEY
+      - echo -e "Host build\n\tHostname $(cat /build_env/linode_ip_address| cut -d'=' -f2)\n\tPort 22\n\tUser root\n\t | cut -d'=' -f2)" >> /root/.ssh/config
+      - ssh build
+
     volumes:
       - name: build_env
         path: /build_env
+      - name: ssh_config
+        path: /root/.ssh/
     when:
       status:
         - success
@@ -67,10 +75,12 @@ steps:
     commands:
       - cd /build_env/setup
       - ansible-galaxy collection install community.docker
-      - ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ansible/docker_setup.yml -i $(cat /build_env/linode_ip_address | cut -d'=' -f2), --extra-vars "ansible_password=$(cat /build_env/linode_root_pass | cut -d'=' -f2)"
+      - ansible-playbook ansible/docker_setup.yml -i $(cat /build_env/linode_ip_address | cut -d'=' -f2), --extra-vars "ansible_password=$(cat /build_env/linode_root_pass | cut -d'=' -f2)"
     volumes:
       - name: build_env
         path: /build_env
+      - name: ssh_config
+        path: /root/.ssh/
     when:
       status:
         - success
@@ -100,6 +110,8 @@ volumes:
   #- name: dockersock
   #  temp: {}
   - name: build_env
+    temp: {}
+  - name: ssh_config
     temp: {}
 
 node:
