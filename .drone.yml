@@ -21,7 +21,7 @@ steps:
     - name: dockersock
       path: /var/run/docker.sock
   commands:
-  - while ! docker info -f '{{.ServerVersion}}'; do sleep 1; done
+  - while docker info -f '{{.ServerVersion}}'; do sleep 1; done
 
 
 - name: build image
