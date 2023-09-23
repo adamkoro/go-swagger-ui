@@ -84,7 +84,7 @@ steps:
       status:
         - success
 
-  - name: build docker image
+  - name: build multiarch image
     image:  registry.adamkoro.com/docker/library/docker:24.0.6-cli-alpine3.18
     commands:
       - docker context create build --docker "host=ssh://root@$(cat /build_env/linode_ip_address | cut -d'=' -f2)"
