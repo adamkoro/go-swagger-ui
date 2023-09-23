@@ -45,6 +45,19 @@ steps:
       status:
         - success
 
+  - name: wait for linode
+    image: registry.adamkoro.com/library/ansible:latest
+    environment:
+      ANSIBLE_USER: root
+    commands:
+      - while ! nc -q0 $(cat /build_env/linode_ip_address | cut -d'=' -f2) 22 < /dev/null > /dev/null 2>&1; do sleep 1;done
+    volumes:
+      - name: build_env
+        path: /build_env
+    when:
+      status:
+        - success
+
   - name: setup linode
     image: registry.adamkoro.com/library/ansible:latest
     environment:
@@ -52,7 +65,6 @@ steps:
     commands:
       - cd /build_env/setup
       - ansible-galaxy collection install community.docker
-      - while ! nc -q0 $(cat /build_env/linode_root_pass | cut -d'=' -f2) 22 < /dev/null > /dev/null 2>&1; do sleep 1;done
       - ansible-playbook ansible/docker_setup.yml -i $(cat /build_env/linode_ip_address | cut -d'=' -f2), --extra-vars "ansible_password=$(cat /build_env/linode_root_pass | cut -d'=' -f2)"
     volumes:
       - name: build_env
