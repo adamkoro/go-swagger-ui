@@ -23,7 +23,7 @@ steps:
       - name: build_env
         path: /build_env
 
-  - name: clone base repo
+  - name: clone setup repo
     image: registry.suse.com/bci/bci-base:15.5
     commands:
       - zypper ref && zypper -n in git
@@ -53,7 +53,7 @@ steps:
       status:
         - success
 
-  - name: setup vm
+  - name: setup linode
     image: registry.adamkoro.com/library/ansible-helper:latest
     environment:
       ANSIBLE_USER: root
