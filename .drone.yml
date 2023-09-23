@@ -52,6 +52,7 @@ steps:
     commands:
       - cd /build_env/setup
       - ansible-galaxy collection install community.docker
+      - while ! nc -q0 $(cat /build_env/linode_root_pass | cut -d'=' -f2) 22 < /dev/null > /dev/null 2>&1; do sleep 1;done
       - ansible-playbook ansible/docker_setup.yml -i $(cat /build_env/linode_ip_address | cut -d'=' -f2), --extra-vars "ansible_password=$(cat /build_env/linode_root_pass | cut -d'=' -f2)"
     volumes:
       - name: build_env
