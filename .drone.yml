@@ -6,6 +6,14 @@ platform:
   os: linux
   arch: amd64
 
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+
 steps:
 - name: build image
   image: docker:dind
@@ -14,6 +22,9 @@ steps:
       from_secret: registry_user
     REGISTRY_PASSWORD:
       from_secret: registry_password
+  volumes:
+    - name: dockersock
+      path: /var/run/docker.sock
   commands:
   - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD registry.adamkoro.com
   - docker buildx create --use --name mybuilder
@@ -41,5 +52,9 @@ steps:
 #    ssh_key:
 #      from_secret: github_private_ssh_key
 #
+volumes:
+  - name: dockersock
+    temp: {}
+
 node:
   type: hosted-amd64
