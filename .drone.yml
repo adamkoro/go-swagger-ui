@@ -15,7 +15,7 @@ steps:
     REGISTRY_PASSWORD:
       from_secret: registry_password
   commands:
-  - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} registry.adamkoro.com
+  - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD registry.adamkoro.com
   - docker buildx create --use --name mybuilder
   - docker buildx build --platform linux/amd64,linux/arm64 -t registry.adamkoro.com/library/go-swagger-ui:${DRONE_COMMIT_SHA:0:7} -t registry.adamkoro.com/library/go-swagger-ui:latest . --push -f Dockerfile
 
