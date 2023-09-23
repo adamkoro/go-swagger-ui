@@ -84,6 +84,17 @@ steps:
       status:
         - success
 
+  - name: build docker image
+    image:  registry.adamkoro.com/docker/library/docker:24.0.6-cli-alpine3.18
+    commands:
+      - docker context create build --docker "host=ssh://root@$(cat /build_env/linode_ip_address | cut -d'=' -f2)"
+      - docker context use build
+      - docker buildx create --use --name builder
+      - docker buildx build --platform linux/amd64,linux/arm64/v8,linux/ppc64le,linux/s390x --push -t registry.adamkoro.com/docker/swagger-ui:latest -t registry.adamkoro.com/docker/swagger-ui:${DRONE_COMMIT_SHA:0:7} . -f Dockerfile
+    volumes:
+      - name: ssh_config
+        path: /root/.ssh/
+
   - name: delete linode
     image: registry.adamkoro.com/docker/hashicorp/terraform:1.5.5
     environment:
@@ -106,8 +117,6 @@ steps:
 
 
 volumes:
-  #- name: dockersock
-  #  temp: {}
   - name: build_env
     temp: {}
   - name: ssh_config
