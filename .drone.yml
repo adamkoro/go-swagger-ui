@@ -21,7 +21,7 @@ steps:
     - name: dockersock
       path: /var/run/
   commands:
-  - while docker info -f '{{.ServerVersion}}'; do sleep 1; done
+  - while true; do docker info > /dev/null 2>&1 && echo "Docker server up" && break || (echo "Docker server down. Retrying..." && sleep 1); done
 
 
 - name: build image
