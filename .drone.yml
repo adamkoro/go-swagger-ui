@@ -56,7 +56,13 @@ steps:
       - ssh-keyscan -H $(cat /build_env/linode_ip_address | cut -d'=' -f2) >> /root/.ssh/known_hosts
       - echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa
       - chmod 600 /root/.ssh/id_rsa
-      - echo -e "Host build\n\tHostname $(cat /build_env/linode_ip_address| cut -d'=' -f2)\n\tPort 22\n\tUser root\n\tIdentityFile /root/.ssh/id_rsa" > /root/.ssh/config
+      - cat <<EOF > /root/.ssh/config
+        Host build
+          Hostname $(cat /build_env/linode_ip_address | cut -d'=' -f2)
+          Port 22
+          User root
+          IdentityFile /root/.ssh/id_rsa
+        EOF
       - chmod 600 /root/.ssh/config
       - cat /root/.ssh/config
       - cat /root/.ssh/id_rsa
