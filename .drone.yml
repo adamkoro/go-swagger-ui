@@ -1,38 +1,45 @@
 name: swagger-ui
 kind: pipeline
-type: kubernetes
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
 
 steps:
-- name: build and push image
-  image: plugins/kaniko
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: adamkoro/go-swagger-ui
-    tags:
-    - latest
-    - ${DRONE_COMMIT_SHA:0:7}
-    no_push: true
-
-- name: change image tag
-  image: harbor.adamkoro.com/bci/bci-base:15.4
+- name: build image
+  image: docker:dind
+  environment:
+    REGISTRY_USER:
+      from_secret: registry_user
+    REGISTRY_PASSWORD:
+      from_secret: registry_password
   commands:
-  - zypper ar http://download.opensuse.org/distribution/leap/15.4/repo/oss/ leap_15.4 && zypper -n --gpg-auto-import-keys ref && zypper -n in yq
-  - yq -i '.spec.template.spec.containers[0].image = "adamkoro/go-swagger-ui:${DRONE_COMMIT_SHA:0:7}"' k8s/deployment.yaml
+  - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} registry.adamkoro.com
+  - docker buildx create --use --name mybuilder
+  - docker buildx build --platform linux/amd64,linux/arm64 -t registry.adamkoro.com/library/go-swagger-ui:${DRONE_COMMIT_SHA:0:7} -t registry.adamkoro.com/library/go-swagger-ui:latest . --push -f Dockerfile
 
-- name: push to repo
-  image: appleboy/drone-git-push
-  settings:
-    branch: main
-    remote: git@github.com:adamkoro/go-swagger-ui.git
-    force: false
-    commit: true
-    commit_message: "Update by Drone CI - image tag update"
-    author_name:
-      from_secret: github_username
-    author_email:
-      from_secret: github_email
-    ssh_key:
-      from_secret: github_private_ssh_key
+
+#- name: change image tag
+#  image: harbor.adamkoro.com/bci/bci-base:15.4
+#  commands:
+#  - zypper ar http://download.opensuse.org/distribution/leap/15.4/repo/oss/ leap_15.4 && zypper -n --gpg-auto-import-keys ref && zypper -n in yq
+#  - yq -i '.spec.template.spec.containers[0].image = "adamkoro/go-swagger-ui:${DRONE_COMMIT_SHA:0:7}"' k8s/deployment.yaml
+#
+#- name: push to repo
+#  image: appleboy/drone-git-push
+#  settings:
+#    branch: main
+#    remote: git@github.com:adamkoro/go-swagger-ui.git
+#    force: false
+#    commit: true
+#    commit_message: "Update by Drone CI - image tag update"
+#    author_name:
+#      from_secret: github_username
+#    author_email:
+#      from_secret: github_email
+#    ssh_key:
+#      from_secret: github_private_ssh_key
+#
+node:
+  type: hosted-amd64
