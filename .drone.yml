@@ -39,6 +39,7 @@ steps:
         from_secret: linode_token
       TF_VAR_linode_authorized_keys:
         from_secret: linode_authorized_keys
+      TF_VAR_linode_label: swagger-ui-build
     commands:
       - export $(cat /build_env/linode_root_pass | xargs)
       - cd /build_env
