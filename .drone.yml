@@ -86,12 +86,20 @@ steps:
 
   - name: build multiarch image
     image:  registry.adamkoro.com/docker/library/docker:24.0.6-cli-alpine3.18
+    environment:
+      REGISTRY_USER:
+        from_secret: registry_user
+      REGISTRY_PASSWORD:
+        from_secret: registry_password
     commands:
       - docker context create build --docker "host=ssh://root@$(cat /build_env/linode_ip_address | cut -d'=' -f2)"
       - docker context use build
       - docker buildx create --use --name builder
+      - docker login registry.adamkoro.com -u $REGISTRY_USER -p $REGISTRY_PASSWORD
       - docker buildx build --platform linux/amd64,linux/arm64/v8,linux/ppc64le,linux/s390x --push -t registry.adamkoro.com/docker/swagger-ui:latest -t registry.adamkoro.com/docker/swagger-ui:${DRONE_COMMIT_SHA:0:7} . -f Dockerfile
     volumes:
+      - name: build_env
+        path: /build_env
       - name: ssh_config
         path: /root/.ssh/
 
