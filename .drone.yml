@@ -132,9 +132,6 @@ steps:
         - failure
         - success
 
-trigger:
-  repo: 
-    - adamkoro/go-swagger-ui/swagger-ui
 
 volumes:
   #- name: dockersock
