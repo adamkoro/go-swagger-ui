@@ -98,7 +98,7 @@ steps:
       - docker context use build
       - docker buildx create --use --name builder
       - docker login registry.adamkoro.com -u $REGISTRY_USER -p $REGISTRY_PASSWORD
-      - docker buildx build --platform linux/amd64,linux/arm64/v8,linux/ppc64le,linux/s390x --push -t registry.adamkoro.com/library/swagger-ui:latest -t registry.adamkoro.com/library/swagger-ui:${DRONE_COMMIT_SHA:0:7} . -f Dockerfile
+      - docker buildx build --platform linux/amd64,linux/arm64/v8 --push -t registry.adamkoro.com/library/go-swagger-ui:latest -t registry.adamkoro.com/library/go-swagger-ui:${DRONE_COMMIT_SHA:0:7} . -f Dockerfile
     volumes:
       - name: build_env
         path: /build_env
