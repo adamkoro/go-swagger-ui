@@ -32,6 +32,7 @@ steps:
       TF_VAR_linode_authorized_keys:
         from_secret: linode_authorized_keys
       TF_VAR_linode_label: swagger-ui-build
+      TF_VAR_linode_type: g6-standard-8
     commands:
       - export $(cat /build_env/linode_root_pass | xargs)
       - cd /build_env/setup
