@@ -61,6 +61,10 @@ steps:
 #    ssh_key:
 #      from_secret: github_private_ssh_key
 #
+trigger:
+  repo: 
+    - adamkoro/go-swagger-ui/swagger-ui
+
 volumes:
   - name: dockersock
     temp: {}
