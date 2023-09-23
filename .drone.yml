@@ -51,8 +51,6 @@ steps:
       SSH_PRIVATE_KEY:
         from_secret: linode_ssh_private_key
     commands:
-      - cat /build_env/linode_ip_address
-      - cat /build_env/linode_root_pass
       - while ! nc -q0 $(cat /build_env/linode_ip_address | cut -d'=' -f2) 22 < /dev/null > /dev/null 2>&1; do sleep 1;done
       - ssh-keyscan -H $(cat /build_env/linode_ip_address | cut -d'=' -f2) >> /root/.ssh/known_hosts
       - ssh-add $SSH_PRIVATE_KEY
