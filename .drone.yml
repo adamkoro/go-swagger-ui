@@ -27,7 +27,7 @@ steps:
     image: registry.suse.com/bci/bci-base:15.5
     commands:
       - zypper ref && zypper -n in git
-      - git clone https://github.com/adamkoro/linode_terraform.git /build_env/
+      - git clone https://github.com/adamkoro/linode_terraform.git /build_env/setup
     volumes:
       - name: build_env
         path: /build_env
@@ -42,7 +42,7 @@ steps:
       TF_VAR_linode_label: swagger-ui-build
     commands:
       - export $(cat /build_env/linode_root_pass | xargs)
-      - cd /build_env
+      - cd /build_env/setup
       - terraform -chdir=terraform/ init 
       - terraform -chdir=terraform/ plan
       - terraform -chdir=terraform/ apply -auto-approve
@@ -58,7 +58,7 @@ steps:
     environment:
       ANSIBLE_USER: root
     commands:
-      - cd /build_env
+      - cd /build_env/setup
       - ansible-galaxy collection install community.docker
       - ansible-playbook ansible/setup.yml -i $(cat /build_env/linode_ip_address | cut -d'=' -f2), -k $(cat /build_env/linode_root_pass | cut -d'=' -f2)
     volumes:
@@ -122,7 +122,7 @@ steps:
         from_secret: linode_authorized_keys
     commands:
       - export $(cat /build_env/linode_root_pass | xargs)
-      - cd /build_env
+      - cd /build_env/setup
       - terraform -chdir=terraform/ init 
       - terraform -chdir=terraform/ destroy -auto-approve
     volumes:
