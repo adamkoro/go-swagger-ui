@@ -32,7 +32,8 @@ steps:
       TF_VAR_linode_authorized_keys:
         from_secret: linode_authorized_keys
       TF_VAR_linode_label: swagger-ui-build-${DRONE_COMMIT_SHA:0:7}
-      TF_VAR_linode_type: g6-standard-4
+      TF_VAR_linode_type: g6-standard-8
+      TF_VAR_linode_region: it-mil
     commands:
       - export $(cat /build_env/linode_root_pass | xargs)
       - cd /build_env/setup
