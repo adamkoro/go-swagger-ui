@@ -1,17 +1,17 @@
 build:
-	cd cmd && go build -o server main.go
+	cd swagger-ui && go build -o server main.go
 
 run:
-	cd cmd && export HTTP_PORT=8080 && go run main.go
+	cd swagger-ui && export HTTP_PORT=8080 && go run main.go
 
 tidy:
-	cd cmd && go mod tidy
+	cd swagger-ui && go mod tidy
 
 test:
-	cd cmd && go test -v ./...
+	cd swagger-ui && go test -v ./...
 
 compile:
-	cd cmd && GOOS=linux GOARCH=amd64 go build -o server main.go
+	cd swagger-ui && GOOS=linux GOARCH=amd64 go build -o server main.go
 
 watch:
-	cd cmd && ~/go/bin/reflex -s -r '\.go$$' make run
+	cd swagger-ui && ~/go/bin/reflex -s -r '\.go$$' make run
