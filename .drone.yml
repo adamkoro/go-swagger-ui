@@ -55,7 +55,7 @@ steps:
       - eval $(ssh-agent -s)
       - ssh-keyscan -H $(cat /build_env/linode_ip_address | cut -d'=' -f2) >> /root/.ssh/known_hosts
       - echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa
-      - echo -e "Host build\n\tHostname $(cat /build_env/linode_ip_address| cut -d'=' -f2)\n\tPort 22\n\tUser root\n\tIdentityFile /root/.ssh/id_rsa" >> /root/.ssh/config
+      - echo -e "Host build\n\tHostname $(cat /build_env/linode_ip_address| cut -d'=' -f2)\n\tPort 22\n\tUser root\n\tIdentityFile /root/.ssh/id_rsa" > /root/.ssh/config
       - ssh build
 
     volumes:
